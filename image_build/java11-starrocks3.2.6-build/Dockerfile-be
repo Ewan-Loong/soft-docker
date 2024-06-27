@@ -1,0 +1,12 @@
+FROM ubuntu:20.04
+# 安装java11 配置环境变量
+ADD jdk-11.0.23_linux-x64_bin.tar.gz /usr/local
+ENV JAVA_HOME=/usr/local/jdk-11.0.23 JRE_HOME=/usr/local/jdk-11.0.23/jre \
+    CLASSPATH=${CLASSPATH}:/usr/local/jdk-11.0.23/lib:/usr/local/jdk-11.0.23/jre/lib \
+	PATH=${PATH}:/usr/local/jdk-11.0.23/lib
+# 安装starrcoks3.2.6 fe配置环境变量 连接器
+COPY StarRocks-3.2.6/be /opt/starrocks/be
+ENV SR_HOME=/opt/starrocks
+COPY --chmod=777 docker-entrypoint.sh /
+WORKDIR $SR_HOME
+ENTRYPOINT ["/docker-entrypoint.sh"]
