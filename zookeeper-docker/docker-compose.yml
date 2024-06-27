@@ -1,0 +1,35 @@
+version: '3'
+
+networks:
+  hdfs: 
+    name: hdfs
+    driver: bridge
+
+services:
+  zk1:
+    image: zookeeper:3.8.4
+    container_name: zk1
+    volumes:
+      - ./conf:/conf
+      - ./data1:/data
+    networks:
+      - hdfs
+
+  zk2:
+    image: zookeeper:3.8.4
+    container_name: zk2
+    volumes:
+      - ./conf:/conf
+      - ./data2:/data
+    networks:
+      - hdfs
+
+  zk3:
+    image: zookeeper:3.8.4
+    container_name: zk3
+    volumes:
+      - ./conf:/conf
+      - ./data3:/data    
+    networks:
+      - hdfs
+

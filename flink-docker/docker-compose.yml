@@ -1,0 +1,37 @@
+version: '3.3'
+
+services:
+  jobmanager:
+    image: jdk11-flink:1.17.1
+    volumes:
+      - ./data/job:/opt/data/job
+      - ./conf/flink-conf.yaml:/opt/flink-1.17.1/conf/flink-conf.yaml
+    #  - ./conf/masters:/opt/flink-1.17.1/conf/masters
+    #  - ./conf/workers:/opt/flink-1.17.1/conf/workers
+    #  - ./log:/opt/flink-1.17.1/log
+    container_name: jobmanager
+    expose:
+      - "6123"
+    ports:
+      - "8081:8081"
+    # environment:
+    #  - log.file=/opt/flink-1.17.1/log/flink.log
+    command: jobmanager
+
+  taskmanager:
+    image: jdk11-flink:1.17.1
+    container_name: taskmanager
+    volumes:
+      - ./data/task:/opt/data/task
+      - ./conf/flink-conf.yaml:/opt/flink-1.17.1/conf/flink-conf.yaml
+    #  - ./conf/masters:/opt/flink-1.17.1/conf/masters
+    #  - ./conf/workers:/opt/flink-1.17.1/conf/workers
+    #  - ./log:/opt/flink-1.17.1/log
+    expose:
+      - "6121"
+      - "6122"
+    # environment:
+    #  - log.file=/opt/flink-1.17.1/log/flink.log
+    depends_on:
+      - jobmanager
+    command: taskmanager

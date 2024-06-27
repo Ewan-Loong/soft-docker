@@ -1,0 +1,107 @@
+version: '3'
+
+networks:
+  sr_network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.128.0.0/16
+          gateway: 172.128.0.1
+
+services:
+  fe1:
+    image: jdk11-starrocks-fe:3.2.6
+    container_name: fe1
+    ports:
+      - "9031:9030"
+      - "8031:8030"
+    command: fe
+    volumes:
+      - ./fe1/meta:/opt/starrocks/fe/meta
+      - ./fe1/logs:/opt/starrocks/fe/log
+    networks:  
+      sr_network:
+        ipv4_address: 172.128.0.11
+
+  fe2:
+    image: jdk11-starrocks-fe:3.2.6
+    container_name: fe2
+    ports:
+      - "9032:9030"
+      - "8032:8030"
+    command: fe
+    volumes:
+      - ./fe2/meta:/opt/starrocks/fe/meta
+      - ./fe2/logs:/opt/starrocks/fe/log
+    networks:
+      sr_network:
+        ipv4_address: 172.128.0.12
+
+  fe3:
+    image: jdk11-starrocks-fe:3.2.6
+    container_name: fe3
+    ports:
+      - "9033:9030"
+      - "8033:8030"
+    command: fe
+    volumes:
+      - ./fe3/meta:/opt/starrocks/fe/meta
+      - ./fe3/logs:/opt/starrocks/fe/log
+    networks:
+      sr_network:
+        ipv4_address: 172.128.0.13
+
+
+  be1:
+    image: jdk11-starrocks-be:3.2.6
+    container_name: be1
+    command: be
+#    ports:
+#      - "9040:9040"
+#      - "9060:9060"
+    volumes:
+      - ./be1/storage:/opt/starrocks/be/storage
+      - ./be1/logs:/opt/starrocks/be/log
+    depends_on:
+      - fe1
+      - fe2
+      - fe3
+    networks:
+      sr_network:
+        ipv4_address: 172.128.0.21
+
+  be2:
+    image: jdk11-starrocks-be:3.2.6
+    container_name: be2
+    command: be
+#    ports:
+#      - "9040:9040"
+#      - "9060:9060"
+    volumes:
+      - ./be2/storage:/opt/starrocks/be/storage
+      - ./be2/logs:/opt/starrocks/be/log
+    depends_on:
+      - fe1
+      - fe2
+      - fe3
+    networks:
+      sr_network:
+        ipv4_address: 172.128.0.22
+
+  be3:
+    image: jdk11-starrocks-be:3.2.6
+    container_name: be3
+    command: be
+#    ports:
+#      - "9040:9040"
+#      - "9060:9060"
+    volumes:
+      - ./be3/storage:/opt/starrocks/be/storage
+      - ./be3/logs:/opt/starrocks/be/log
+    depends_on:
+      - fe1
+      - fe2
+      - fe3
+    networks:
+      sr_network:
+        ipv4_address: 172.128.0.23

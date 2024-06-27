@@ -1,0 +1,77 @@
+version: '3'
+
+networks:
+  hdfs:
+    driver: bridge
+
+services:
+  namenode1:
+    image: apache/hadoop:2.10
+    container_name: namenode1
+    privileged: true
+    user: "0"
+    ports:
+      - "50070:50070"
+      - "9000:9000"
+    command: ["hadoop","namenode"]
+    #command: bash
+    tty: TRUE
+    volumes:
+      - ./hadoop:/opt/hadoop/etc/hadoop
+      - ./n1-tmp:/opt/hadoop/etc/data
+      # - ./n1-logs:/opt/hadoop/logs
+    networks:
+      - hdfs
+ 
+  datanode1:
+    image: apache/hadoop:2.10
+    container_name: datanode1
+    privileged: true
+    user: "0"
+    ports:
+      - "9870:9870"
+    command: ["hadoop","datanode"] 
+    #command: bash
+    tty: TRUE
+    volumes:
+      - ./hadoop:/opt/hadoop/etc/hadoop
+      - ./d1-tmp:/opt/hadoop/etc/data
+      # - ./d1-logs:/opt/hadoop/logs
+    networks:
+      - hdfs
+    depends_on:
+      - namenode1
+
+  datanode2:
+    image: apache/hadoop:2.10
+    container_name: datanode2
+    privileged: true
+    user: "0"
+    command: ["hadoop","datanode"]
+    #command: bash
+    tty: TRUE
+    volumes:
+      - ./hadoop:/opt/hadoop/etc/hadoop
+      - ./d2-tmp:/opt/hadoop/etc/data
+      # - ./d2-logs:/opt/hadoop/logs
+    networks:
+      - hdfs
+    depends_on:
+      - namenode1
+
+  datanode3:
+    image: apache/hadoop:2.10
+    container_name: datanode3
+    privileged: true
+    user: "0"
+    command: ["hadoop","datanode"]
+    #command: bash
+    tty: TRUE
+    volumes:
+      - ./hadoop:/opt/hadoop/etc/hadoop
+      - ./d3-tmp:/opt/hadoop/etc/data
+      # - ./d3-logs:/opt/hadoop/logs
+    networks:
+      - hdfs
+    depends_on:
+      - namenode1

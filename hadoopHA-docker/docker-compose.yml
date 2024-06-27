@@ -1,0 +1,64 @@
+version: '3'
+
+networks:
+  hdfs:
+    external: true
+
+services:
+  node1:
+    image: apache/hadoop:2.10
+    container_name: node1
+    privileged: true
+    user: "0"
+    ports:
+      - "50071:50070"
+    command: sh /opt/hadoop/etc/jn_nn_start.sh
+    #command: bash
+    #tty: TRUE
+    volumes:
+      - ./hadoop:/opt/hadoop/etc/hadoop
+      - ./tmp1:/opt/hadoop/etc/data/tmp
+      - ./jn1:/opt/hadoop/etc/data/jn
+      - ./logs1:/opt/hadoop/logs
+      - ./jn_nn_start.sh:/opt/hadoop/etc/jn_nn_start.sh
+    networks:
+      - hdfs
+  
+  node2:
+    image: apache/hadoop:2.10
+    container_name: node2
+    privileged: true
+    user: "0"
+    ports:
+      - "50072:50070"
+    #command: /opt/hadoop/bin/hdfs namenode & /opt/hadoop/bin/hdfs datanode
+    command: sh /opt/hadoop/etc/jn_nn_start.sh
+    #command: bash
+    #tty: TRUE
+    volumes:
+      - ./hadoop:/opt/hadoop/etc/hadoop
+      - ./tmp2:/opt/hadoop/etc/data/tmp
+      - ./jn2:/opt/hadoop/etc/data/jn
+      - ./logs2:/opt/hadoop/logs
+      - ./jn_nn_start.sh:/opt/hadoop/etc/jn_nn_start.sh
+    networks:
+      - hdfs
+  
+  node3:
+    image: apache/hadoop:2.10
+    container_name: node3
+    privileged: true
+    user: "0"
+    command: /opt/hadoop/bin/hadoop datanode
+    #command: bash
+    #tty: TRUE
+    volumes:
+      - ./hadoop:/opt/hadoop/etc/hadoop
+      - ./tmp3:/opt/hadoop/etc/data/tmp
+      - ./jn3:/opt/hadoop/etc/data/jn
+      - ./logs3:/opt/hadoop/logs
+    depends_on:
+      - node1
+      - node2
+    networks:
+      - hdfs

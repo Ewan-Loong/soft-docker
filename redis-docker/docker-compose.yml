@@ -1,0 +1,14 @@
+version: '3'
+
+services:
+  master:
+    image: redis:latest
+    container_name: redis-master
+    command: /bin/bash -c "redis-server /etc/redis/redis.conf"
+    volumes:
+      - ./conf:/etc/redis
+      - ./data:/data
+      - ./log:/log
+    ports:
+      - 6379:6379
+

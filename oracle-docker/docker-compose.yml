@@ -1,0 +1,23 @@
+version: '3.3'
+
+services:
+  oracle19c:
+    image: container-registry.oracle.com/database/enterprise:19.3.0.0
+    volumes:
+      - ./data:/opt/oracle/oradata
+      - ./scripts/startup:/opt/oracle/scripts/startup
+      - ./scripts/setup:/opt/oracle/scripts/setup
+      # 注意以上三个文件路径需要给予权限777 否则将报错
+    container_name: oracle19c
+    restart: always
+    ports:
+      - "1521:1521"
+      - "5500:5500"
+    environment:
+      ORACLE_SID: DEV
+      ORACLE_PDB: P_DEV
+      ORACLE_PWD: oracle
+      ORACLE_CHARACTERSET: UTF8
+      NLS_DATE_FORMAT: "YYYY-MM-DD HH24:MI:SS"
+      NLS_DATE_LANGUAGE: "ENGLISH"
+      TZ: "Asia/Shanghai"

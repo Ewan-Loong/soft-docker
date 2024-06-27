@@ -1,0 +1,15 @@
+version: '3.3'
+
+services:
+  mysql8:
+    image: mysql:8.0.26
+    volumes:
+      - ./data:/var/lib/mysql
+      # - ./my.cnf:/etc/mysql/my.cnf
+      # - ./conf.d:/etc/mysql/conf.d
+      - ./log:/var/log/mysql
+    container_name: mysql8
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=root

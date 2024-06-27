@@ -1,0 +1,78 @@
+# 需要登录oracle仓库后 再拉取镜像
+docker login -u 596473933@qq.com -p LONGYIFAN520..z https://container-registry.oracle.com/
+
+docker pull container-registry.oracle.com/database/enterprise:19.3.0.0
+
+# 常用参数
+docker run --name <container name> \
+-p <host port>:1521 -p <host port>:5500 -p <host port>:2484 \
+--ulimit nofile=1024:65536 --ulimit nproc=2047:16384 --ulimit stack=10485760:33554432 --ulimit memlock=3221225472 \
+-e ORACLE_SID=<your SID> \
+-e ORACLE_PDB=<your PDB name> \
+-e ORACLE_PWD=<your database passwords> \
+-e INIT_SGA_SIZE=<your database SGA memory in MB> \
+-e INIT_PGA_SIZE=<your database PGA memory in MB> \
+-e INIT_CPU_COUNT=<cpu_count init-parameter> \
+-e INIT_PROCESSES=<processes init-parameter> \
+-e ORACLE_EDITION=<your database edition> \
+-e ORACLE_CHARACTERSET=<your character set> \
+-e ENABLE_ARCHIVELOG=true \
+-e ENABLE_FORCE_LOGGING=true \
+-e ENABLE_TCPS=true \
+-v [<host mount point>:]/opt/oracle/oradata \
+ oracle/database:21.3.0-ee
+
+Parameters:
+   --name:        The name of the container (default: auto generated).
+   -p:            The port mapping of the host port to the container port.
+                  The following ports are exposed: 1521 (Oracle Listener), 5500 (OEM Express), 2484 (TCPS Listener Port if TCPS is enabled).
+   --ulimit:      Resource limits. Update according to Oracle Database documentation.
+   -e ORACLE_SID: The Oracle Database SID that should be used (default: ORCLCDB).
+   -e ORACLE_PDB: The Oracle Database PDB name that should be used (default: ORCLPDB1).
+   -e ORACLE_PWD: The Oracle Database SYS, SYSTEM and PDBADMIN password (default: auto generated).
+   -e INIT_SGA_SIZE:
+                  The total memory in MB that should be used for all SGA components (optional).
+                  Supported by Oracle Database 19.3 onwards.
+   -e INIT_PGA_SIZE:
+                  The target aggregate PGA memory in MB that should be used for all server processes attached to the instance (optional).
+                  Supported by Oracle Database 19.3 onwards.
+   -e INIT_CPU_COUNT:
+                  Specifies the number of CPUs available for Oracle Database to use. 
+                  On CPUs with multiple CPU threads, it specifies the total number of available CPU threads (optional).
+   -e INIT_PROCESSES:
+                  Specifies the maximum number of operating system user processes that can simultaneously connect to Oracle Database. 
+                  Its value should allow for all background processes such as locks, job queue processes, and parallel execution processes (optional).
+   -e AUTO_MEM_CALCULATION:
+                  To enable auto calculation of the DBCA total memory limit during the database creation, based on
+                  the available memory of the container, which can be constrained using the `docker run --memory`
+                  option. If set to 'false', the total memory will be set as 2GB (default: true).
+                  Note that this parameter is not taken into account if the `-e INIT_SGA_SIZE` or `-e INIT_PGA_SIZE`
+                  are set.
+                  Supported by Oracle Database 19.3 onwards.
+   -e ORACLE_EDITION:
+                  The Oracle Database Edition (enterprise/standard).
+                  Supported by Oracle Database 19.3 onwards.
+   -e ORACLE_CHARACTERSET:
+                  The character set to use when creating the database (default: AL32UTF8).
+   -e ENABLE_ARCHIVELOG:
+                  To enable archive log mode when creating the database (default: false).
+                  Supported by Oracle Database 19.3 onwards.
+   -e ENABLE_FORCE_LOGGING:
+                  To enable force logging mode when creating the database (default: false).
+                  Supported by Oracle Database 23.4 onwards.
+   -e ENABLE_TCPS:
+                  To enable TCPS connections for Oracle Database.
+                  Supported by Oracle Database 19.3 onwards.
+   -e TCPS_CERTS_LOCATION:
+                  Location of user provided SSL certificates for TCPS connection
+                  Supported by Oracle Database 19.3 onwards.
+   -v /opt/oracle/oradata
+                  The data volume to use for the database.
+                  Has to be writable by the Unix "oracle" (uid: 54321) user inside the container.
+                  If omitted the database will not be persisted over container recreation.
+   -v /opt/oracle/scripts/startup | /docker-entrypoint-initdb.d/startup
+                  Optional: A volume with custom scripts to be run after database startup.
+                  For further details see the "Running scripts after setup and on startup" section below.
+   -v /opt/oracle/scripts/setup | /docker-entrypoint-initdb.d/setup
+                  Optional: A volume with custom scripts to be run after database setup.
+                  For further details see the "Running scripts after setup and on startup" section below.
