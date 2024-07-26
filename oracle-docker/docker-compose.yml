@@ -9,7 +9,7 @@ services:
       - ./scripts/setup:/opt/oracle/scripts/setup
       # 注意以上三个文件路径需要给予权限777 否则将报错
     container_name: oracle19c
-    restart: always
+    restart: no
     ports:
       - "1521:1521"
       - "5500:5500"

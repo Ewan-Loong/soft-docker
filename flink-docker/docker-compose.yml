@@ -2,36 +2,38 @@ version: '3.3'
 
 services:
   jobmanager:
-    image: jdk11-flink:1.17.1
+    image: jdk11-flink:1.17.2
     volumes:
-      - ./data/job:/opt/data/job
-      - ./conf/flink-conf.yaml:/opt/flink-1.17.1/conf/flink-conf.yaml
-    #  - ./conf/masters:/opt/flink-1.17.1/conf/masters
-    #  - ./conf/workers:/opt/flink-1.17.1/conf/workers
-    #  - ./log:/opt/flink-1.17.1/log
+    #  - ./data/job:/opt/data/job
+      - ./conf/flink-conf.yaml:/opt/flink-1.17.2/conf/flink-conf.yaml
+    #  - ./conf/masters:/opt/flink-1.17.2/conf/masters
+    #  - ./conf/workers:/opt/flink-1.17.2/conf/workers
+    #  - ./log:/opt/flink-1.17.2/log
+      - /etc/localtime:/etc/localtime:ro
     container_name: jobmanager
     expose:
       - "6123"
     ports:
       - "8081:8081"
-    # environment:
-    #  - log.file=/opt/flink-1.17.1/log/flink.log
+    environment:
+      - TZ=Asia/Shanghai
     command: jobmanager
 
   taskmanager:
-    image: jdk11-flink:1.17.1
+    image: jdk11-flink:1.17.2
     container_name: taskmanager
     volumes:
-      - ./data/task:/opt/data/task
-      - ./conf/flink-conf.yaml:/opt/flink-1.17.1/conf/flink-conf.yaml
-    #  - ./conf/masters:/opt/flink-1.17.1/conf/masters
-    #  - ./conf/workers:/opt/flink-1.17.1/conf/workers
-    #  - ./log:/opt/flink-1.17.1/log
+    #  - ./data/task:/opt/data/task
+      - ./conf/flink-conf.yaml:/opt/flink-1.17.2/conf/flink-conf.yaml
+    #  - ./conf/masters:/opt/flink-1.17.2/conf/masters
+    #  - ./conf/workers:/opt/flink-1.17.2/conf/workers
+    #  - ./log:/opt/flink-1.17.2/log
+      - /etc/localtime:/etc/localtime:ro
     expose:
       - "6121"
       - "6122"
-    # environment:
-    #  - log.file=/opt/flink-1.17.1/log/flink.log
+    environment:
+      - TZ=Asia/Shanghai
     depends_on:
       - jobmanager
     command: taskmanager

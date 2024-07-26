@@ -91,7 +91,7 @@ taskmanager.memory.process.size: 1728m
 
 # The number of task slots that each TaskManager offers. Each slot runs one parallel pipeline.
 
-taskmanager.numberOfTaskSlots: 1
+taskmanager.numberOfTaskSlots: 2
 
 # The parallelism used for programs that did not specify and other parallelism.
 
@@ -310,15 +310,18 @@ rest.bind-address: jobmanager
 #historyserver.archive.fs.refresh-interval: 10000
 
 
+table.local-time-zone: Asia/Shanghai
+
+# 1.17.x不支持使用jdbc，仅支持hive和内存catalog
 #execution:
-#  current-catalog: mysql_catalog  # 设置目标 JdbcCatalog 为会话的当前 catalog
-#  current-database: py3_hrms
+#  current-catalog: mysql8  # 设置目标 JdbcCatalog 为会话的当前 catalog
+#  current-database: py3_dev
 #
-#catalog:
-#  - name: mysql_catalog
+#catalogs:
+#  - name: mysql8
 #    type: jdbc
-#    default-database: py3_hrms
+#    default-database: py3_dev
 #    username: root
 #    password: root
-#    base-url: jdbc:mysql://192.168.2.1:3306/
-#    # driver: com.mysql.cj.jdbc.Driver
+#    base-url: jdbc:mysql://192.168.128.1:3306
+#    driver: com.mysql.cj.jdbc.Driver
