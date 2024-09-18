@@ -15,4 +15,4 @@
 
 ## 主要项目负责人
 
-[@Ewan](https://github.com/Ewan-C196)
+[@Ewan](https://github.com/Ewan-Loong)
